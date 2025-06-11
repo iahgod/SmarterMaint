@@ -58,6 +58,7 @@ class ManutencoesController extends Controller {
             // Inserir nova manutenção no banco de dados
             DB::table('manutencoes')->insert([
                 'instalacao_id' => $instalacao_id,
+                'usuario_id' => $this->loggedUser->id,
                 'responsavel' => $tecnico_id,
                 'titulo' => $titulo,
                 'data_prevista' => $data_prevista,

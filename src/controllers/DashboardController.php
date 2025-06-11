@@ -22,23 +22,27 @@ class DashboardController extends Controller {
         $totalAbertas = DB::table('manutencoes')
             ->select()
             ->where('status', 'aberta')
+            ->where('usuario_id', $this->loggedUser->id)
             ->count();
 
         // Concluidas
         $totalConcluidas = DB::table('manutencoes')
             ->select()
             ->where('status', 'concluida')
+            ->where('usuario_id', $this->loggedUser->id)
             ->count();
 
         // Atrasadas (status != 'concluida' e data_prevista < hoje)
         $totalAtrasadas = DB::table('manutencoes')
             ->select()
             ->where('status', '!=', 'Concluida')
+            ->where('usuario_id', $this->loggedUser->id)
             ->where('data_prevista', '<', date('Y-m-d'))
             ->count();
         $totalAtrasadasArray = DB::table('manutencoes')
             ->select('id')
             ->where('status', '!=', 'Concluida')
+            ->where('usuario_id', $this->loggedUser->id)
             ->where('data_prevista', '<', date('Y-m-d'))
             ->get();
         if($totalAtrasadasArray){
@@ -53,6 +57,7 @@ class DashboardController extends Controller {
         // Próximas manutenções (data_prevista >= hoje E <= +7 dias)
         $proximasManutencoes = DB::table('manutencoes')->select()
             ->where('status', '!=', 'concluida')
+            ->where('usuario_id', $this->loggedUser->id)
             ->where('data_prevista', '>=', date('Y-m-d'))
             ->where('data_prevista', '<=', date('Y-m-d', strtotime('+7 days')))
             ->orderBy('data_prevista', 'asc')
